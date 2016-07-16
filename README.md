@@ -20,7 +20,7 @@ Installation
 Usage
 ===
 
-- While on any page, launch the devtools. You should see a new tab called `ezLogger`.
+- While on any page, launch the devtools. You should see a new tab called `ezPAARSE Logger`.
 - Once opened, the web traffic will be captured as you browse the internet.
 - Click 'Analyze' to send the captured traffic to ezPAARSE.
 
