@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/spectre.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="app">
+    <div class="header">
+      <button class="btn btn-sm" v-bind:class="{ 'loading': processing }" v-on:click="analyze">Analyze</button>
+      <button class="btn btn-sm" v-on:click="removeNoise">Remove CSS/JS/Images</button>
+      <button class="btn btn-sm" v-on:click="showExport">Export</button>
+      <button class="btn btn-sm" v-on:click="clear">Clear</button>
+      <button class="btn btn-sm" v-on:click="toggleConfig">Config</button>
+    </div>
+
+    <table class="table table-striped" v-bind:class="{ 'full-display': settings.fullDisplay }" id="items">
+      <thead>
+        <tr>
+          <th>URL</th>
+          <th style="width: 140px">Ressource type</th>
+          <th style="width: 110px">Status</th>
+          <th style="width: 110px">Type</th>
+          <th style="width: 110px">Mime</th>
+          <th style="width: 80px"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr v-for="req in requests">
+          <td>{{ req.url }}</td>
+          <td>{{ req.type }}</td>
+          <td><span class="label label-{{ req.status }}">{{ req.status }}</span></td>
+          <td>{{ req.ec.rtype }}</td>
+          <td>{{ req.ec.mime }}</td>
+          <td><button class="btn btn-sm" v-on:click="setDetailed(req)">detail</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Request details -->
+    <div class="active modal" v-if="detailed">
+      <div class="modal-overlay"></div>
+      <div class="modal-container">
+        <div class="modal-header">
+          <button class="btn btn-clear float-right" v-on:click="clearDetails"></button>
+          <div class="modal-title">Full view</div>
+        </div>
+        <div class="modal-body">
+          <div class="content">
+            <h3>Request</h3>
+            <dl>
+              <dt>URL</dt>
+              <dd>{{ detailed.url }}</dd>
+            </dl>
+            <dl>
+              <dt>Resource type</dt>
+              <dd>{{ detailed.type }}</dd>
+            </dl>
+            <dl>
+              <dt>Status</dt>
+              <dd><span class="label label-{{ detailed.status }}">{{ detailed.status }}</span></dd>
+            </dl>
+
+            <div v-if="detailed.ec">
+              <h3>Consultation event</h3>
+              <dl v-for="(prop, value) in detailed.ec">
+                <dt>{{ prop }}</dt>
+                <dd>{{ value }}</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-link" v-on:click="clearDetails">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export -->
+    <div class="active modal" v-if="export">
+      <div class="modal-overlay"></div>
+      <div class="modal-container">
+        <div class="modal-header">
+          <button class="btn btn-clear float-right" v-on:click="clearExport"></button>
+          <div class="modal-title">Export</div>
+        </div>
+        <div class="modal-body">
+          <div class="content">
+            <p>Below is an export of the requests, you can save it and submit it manually to ezPAARSE.</p>
+
+            <div class="form-group">
+              <label class="form-label" for="export-format">Log format</label>
+              <input type="text" class="form-input" id="export-format" value="Log-Format-EZproxy: %{timestamp}<[0-9]+> %m %U %s %{ezid}<[0-9]+>" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="export-logs">Log lines</label>
+              <textarea class="form-input" id="export-logs" rows="10">{{ export }}</textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-link" v-on:click="clearExport">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configuration -->
+    <div class="active modal" v-if="showConfig">
+      <div class="modal-overlay"></div>
+      <div class="modal-container">
+        <div class="modal-header">
+          <button class="btn btn-clear float-right" v-on:click="toggleConfig"></button>
+          <div class="modal-title">Configuration</div>
+        </div>
+        <div class="modal-body">
+          <div class="content">
+            <div class="form-group">
+              <label class="form-label" for="ezurl">ezPAARSE URL</label>
+              <input type="text" class="form-input" v-model="settings.ezpaarseUrl" id="ezurl" placeholder="ezPAARSE URL"/>
+            </div>
+            <div class="form-group">
+              <label class="form-switch">
+                <input type="checkbox" v-model="settings.fullDisplay" />
+                <i class="form-icon"></i> Display long values on multiple lines
+              </label>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="ezurl">Headers</label>
+
+              <div class="columns" v-for="header in settings.headers">
+                <div class="column col-5">
+                  <input class="form-input" type="text" v-model="header.name" placeholder="Name"/>
+                </div>
+                <div class="column col-5">
+                  <input class="column form-input" type="text" v-model="header.value" placeholder="Value"/>
+                </div>
+                <div class="column">
+                  <button class="btn" v-on:click="removeHeader($index)">Remove</button>
+                </div>
+              </div>
+
+              <button class="btn" v-on:click="addHeader">Add</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" v-on:click="saveSettings">Save</button>
+          <button class="btn" v-on:click="clearSettings">Defauts</button>
+          <button class="btn" v-on:click="toggleConfig">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/vue.min.js"></script>
+  <script src="js/fetch.js"></script>
+  <script src="js/panel.js"></script>
+</body>
+</html>

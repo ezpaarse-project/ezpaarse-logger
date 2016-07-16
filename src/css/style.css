@@ -1,0 +1,48 @@
+body {
+  padding-top: 30px;
+}
+.header {
+  padding: 5px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  z-index: 10;
+}
+.modal .content {
+  word-break: break-all;
+}
+table {
+  table-layout: fixed;
+  word-break: break-all;
+  overflow-x: auto;
+}
+table#items td {
+  padding: 1rem;
+}
+table#items:not(.full-display) * {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.label.label-analyzed {
+  color: #ffffff;
+  background-color: #32b643;
+}
+.label.label-rejected {
+  color: #ffffff;
+  background-color: #e85600;
+}
+.label.label-pending {
+  color: #ffffff;
+  background-color: #5764c6;
+}
+.label.label-processing {
+  color: #ffffff;
+  background-color: #3291b6;
+}
+.label.label-error {
+  color: #ffffff;
+  background-color: #e80000;
+}
