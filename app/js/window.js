@@ -1,5 +1,5 @@
 // ID of the logger extension
-const appId = "lpgokpcipeeocehamhgjakgehemfjojc";
+const appId = "ojalbpcpieecpiejgopnfgacooeehemk";
 
 const defaultSettings = {
   ezpaarseUrl: 'http://127.0.0.1:59599',
@@ -67,9 +67,13 @@ const vm = new Vue({
       this.requests = this.requests.filter(req => {
         if (!req.type) { return true; }
 
-        if (req.type.startsWith('image/')) { return false; }
-        if (req.type.endsWith('/javascript')) { return false; }
-        if (req.type.endsWith('/css')) { return false; }
+        switch (req.type) {
+          case 'image':
+          case 'script':
+          case 'stylesheet':
+          case 'font':
+            return false;
+        }
 
         return true;
       });

@@ -23,7 +23,7 @@ Usage
 ===
 
 - Ensure the extension is active
-- Open [chrome://apps/](chrome://apps/) and launch `ezPAARSE Logger`
+- Launch `ezPAARSE Logger` by clicking the extension icon or opening [chrome://apps/](chrome://apps/)
 - Once opened, the web traffic will be captured as you browse the internet.
 - Click 'Analyze' to send the captured traffic to ezPAARSE.
 

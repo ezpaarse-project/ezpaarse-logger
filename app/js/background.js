@@ -1,4 +1,9 @@
-chrome.app.runtime.onLaunched.addListener(() => {
+chrome.app.runtime.onLaunched.addListener(launchApp);
+chrome.runtime.onMessageExternal.addListener((request, sender) => {
+  if (request.wakeUp) { launchApp(); }
+});
+
+function launchApp() {
   chrome.app.window.create('window.html', {
     'id': 'ezlogger-ui',
     'outerBounds': {
@@ -6,4 +11,4 @@ chrome.app.runtime.onLaunched.addListener(() => {
       'height': 800
     }
   });
-});
+}
