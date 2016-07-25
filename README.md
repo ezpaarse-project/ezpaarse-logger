@@ -15,12 +15,15 @@ Installation
  * Open [chrome://extensions](chrome://extensions)
  * Enable 'Developer Mode' checkbox
  * Click 'Load unpacked extensions...'
- * Select the `src` folder
+ * Select the `extension` folder
+ * Click 'Load unpacked extensions...'
+ * Select the `app` folder
 
 Usage
 ===
 
-- While on any page, launch the devtools. You should see a new tab called `ezPAARSE Logger`.
+- Ensure the extension is active
+- Open [chrome://apps/](chrome://apps/) and launch `ezPAARSE Logger`
 - Once opened, the web traffic will be captured as you browse the internet.
 - Click 'Analyze' to send the captured traffic to ezPAARSE.
 

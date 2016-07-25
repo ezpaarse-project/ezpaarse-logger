@@ -1,3 +1,6 @@
+html, body {
+  overflow-y: auto;
+}
 body {
   padding-top: 30px;
 }

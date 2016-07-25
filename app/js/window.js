@@ -1,8 +1,5 @@
-// This one acts in the context of the panel in the Dev Tools
-//
-// Can use
-// chrome.devtools.*
-// chrome.extension.*
+// ID of the logger extension
+const appId = "lpgokpcipeeocehamhgjakgehemfjojc";
 
 const defaultSettings = {
   ezpaarseUrl: 'http://127.0.0.1:59599',
@@ -29,13 +26,16 @@ const vm = new Vue({
   },
   methods: {
     monitor: function () {
-      chrome.devtools.network.onRequestFinished.addListener(info => {
+      // long-lived connection with the extension
+      const port = chrome.runtime.connect(appId);
+
+      port.onMessage.addListener(info => {
         this.requests.push({
-          url: info.request.url,
-          method: info.request.method,
-          type: info.response.content.mimeType,
-          statusCode: info.response.status,
-          startDate: info.startedDateTime,
+          url: info.url,
+          method: info.method,
+          type: info.type,
+          statusCode: info.statusCode,
+          startDate: new Date(info.timeStamp),
           status: 'pending',
           id: ++this.counter,
           ec: null
@@ -43,19 +43,15 @@ const vm = new Vue({
       });
     },
     saveSettings: function () {
-      localStorage.setItem('config', JSON.stringify(this.settings));
+      chrome.storage.local.set({ 'config': this.settings });
     },
     loadSettings: function () {
-      try {
-        this.settings = JSON.parse(localStorage.getItem('config', this.ezpaarseUrl));
-      } finally {
-        if (this.settings) { return; }
-      }
-      this.settings = JSON.parse(JSON.stringify(defaultSettings));
+      chrome.storage.local.get('config', items => {
+        this.settings = (items && items.config) || JSON.parse(JSON.stringify(defaultSettings));
+      });
     },
     clearSettings: function () {
-      localStorage.removeItem('config');
-      this.loadSettings();
+      chrome.storage.local.remove('config', this.loadSettings);
     },
     toggleConfig: function () { this.showConfig = !this.showConfig; },
     setDetailed: function (req) { this.detailed = req; },
@@ -122,7 +118,7 @@ const vm = new Vue({
         method: 'POST',
         body: logs,
         headers: headers
-      }).then(function(response) {
+      }).then(response => {
         if (response.status !== 200) {
           throw new Error('Got status', response.status);
         }

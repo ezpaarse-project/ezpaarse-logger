@@ -1,0 +1,19 @@
+{
+  "name": "ezPAARSE Logger (Extension)",
+  "version": "1.0.0",
+  "description": "Capture the web traffic and send it to the logger application",
+  "manifest_version": 2,
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "permissions": [
+    "<all_urls>",
+    "webRequest"
+  ],
+  "icons": {
+    "16": "img/ezlogger-16.png",
+    "48": "img/ezlogger-48.png",
+    "128": "img/ezlogger-128.png"
+  }
+}
