@@ -1,7 +1,7 @@
-ezPAARSE Logger DevTools Extension
+ezPAARSE Logger
 ===
 
-This chrome extension integrates into devtools. It captures the web traffic and analyzes it with [ezPAARSE](https://github.com/ezpaarse-project/ezpaarse).  
+This chrome application captures all the web traffic from the browser and let you analyze it with [ezPAARSE](https://github.com/ezpaarse-project/ezpaarse).  
 **NB:** this extension only works with the last beta version of ezPAARSE.
 
 Installation
