@@ -1,5 +1,5 @@
 // ID of the logger extension
-const appId = "ojalbpcpieecpiejgopnfgacooeehemk";
+const extensionId = "cpjllnfdfhkmbkplldfndmfdbabcbidc";
 
 const defaultSettings = {
   ezpaarseUrl: 'http://127.0.0.1:59599',
@@ -27,7 +27,7 @@ const vm = new Vue({
   methods: {
     monitor: function () {
       // long-lived connection with the extension
-      const port = chrome.runtime.connect(appId);
+      const port = chrome.runtime.connect(extensionId);
 
       port.onMessage.addListener(info => {
         this.requests.push({
