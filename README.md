@@ -7,17 +7,9 @@ This chrome extension integrates into devtools. It captures the web traffic and 
 Installation
 ===
 
-### From Chrome Web Store
-*Coming soon !*
-
-### Using developer mode
- * Clone the repository or download as archive
- * Open [chrome://extensions](chrome://extensions)
- * Enable 'Developer Mode' checkbox
- * Click 'Load unpacked extensions...'
- * Select the `extension` folder
- * Click 'Load unpacked extensions...'
- * Select the `app` folder
+Install both the extension and application from the Chrome Web Store :
+- [Extension](https://chrome.google.com/webstore/detail/ezpaarse-logger-extension/cpjllnfdfhkmbkplldfndmfdbabcbidc)
+- [Application](https://chrome.google.com/webstore/detail/ezpaarse-logger-app/cgkdokmipoadhnjmckgkmgeffllhhcna)
 
 Usage
 ===
