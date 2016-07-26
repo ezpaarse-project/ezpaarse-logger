@@ -1,6 +1,6 @@
 {
   "name": "ezPAARSE Logger (Extension)",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Capture the web traffic and send it to the logger application",
   "manifest_version": 2,
   "background": {
