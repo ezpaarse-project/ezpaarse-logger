@@ -4,10 +4,10 @@ const extensionId = 'cpjllnfdfhkmbkplldfndmfdbabcbidc';
 const defaultSettings = {
   ezpaarseUrl: 'http://127.0.0.1:59599',
   fullDisplay: false,
+  proxySuffixes: [],
   headers: [
     { name: 'Double-Click-Removal', value: 'false' }
-  ],
-  proxySuffixes: []
+  ]
 };
 
 const vm = new Vue({
@@ -32,9 +32,9 @@ const vm = new Vue({
 
       port.onMessage.addListener(info => {
         this.settings.proxySuffixes.forEach(suffix => {
-          if (!suffix) { return; }
+          if (!suffix || !suffix.str) { return; }
 
-          const reg = new RegExp(`^([a-z]+://[^/]+?)\.?${this.regEscape(suffix)}(/|$)`, 'i');
+          const reg = new RegExp(`^([a-z]+://[^/]+?)\.?${this.regEscape(suffix.str)}(/|$)`, 'i');
           info.url = info.url.replace(reg, '$1$2');
         });
 
@@ -67,7 +67,7 @@ const vm = new Vue({
     clear: function () { this.requests = []; },
     addHeader: function () { this.settings.headers.push({}); },
     removeHeader: function (index) { this.settings.headers.splice(index, 1); },
-    addProxy: function () { this.settings.proxySuffixes.push(''); },
+    addProxy: function () { this.settings.proxySuffixes.push({}); },
     removeProxy: function (index) { this.settings.proxySuffixes.splice(index, 1); },
     removeNoise: function () {
       this.requests = this.requests.filter(req => {

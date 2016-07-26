@@ -151,7 +151,7 @@
 
               <div class="columns" v-for="suffix in settings.proxySuffixes">
                 <div class="column col-10">
-                  <input class="form-input" type="text" v-model="suffix" placeholder="Ex: gate.myproxy.com"/>
+                  <input class="form-input" type="text" v-model="suffix.str" placeholder="Ex: gate.myproxy.com"/>
                 </div>
                 <div class="column">
                   <button class="btn" v-on:click="removeProxy($index)">Remove</button>
