@@ -5,4 +5,7 @@ chrome.webRequest.onCompleted.addListener(details => {
 }, { urls: ['<all_urls>'] });
 
 // long-lived connection
-chrome.runtime.onConnectExternal.addListener(p => { port = p; });
+chrome.runtime.onConnectExternal.addListener(p => {
+  port = p;
+  port.onDisconnect.addListener(() => { port = null; });
+});
