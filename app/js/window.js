@@ -1,5 +1,5 @@
 // ID of the logger extension
-const extensionId = 'ojalbpcpieecpiejgopnfgacooeehemk';
+const extensionId = 'cpjllnfdfhkmbkplldfndmfdbabcbidc';
 
 const defaultSettings = {
   ezpaarseUrl: 'http://127.0.0.1:59599',
