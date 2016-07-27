@@ -12,7 +12,8 @@
   },
   "permissions": [
     "<all_urls>",
-    "webRequest"
+    "webRequest",
+    "management"
   ],
   "icons": {
     "16": "img/ezlogger-16.png",
