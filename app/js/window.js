@@ -2,6 +2,7 @@
 const extensionId = 'cpjllnfdfhkmbkplldfndmfdbabcbidc';
 
 const defaultSettings = {
+  instance: 'other',
   ezpaarseUrl: 'http://127.0.0.1:59599',
   fullDisplay: false,
   proxySuffixes: [],
@@ -105,6 +106,21 @@ const vm = new Vue({
       return str.replace(/([.*+?^${}()|[\]\\])/g, '\\$1');
     },
     analyze: function () {
+      let ezpaarseUrl;
+
+      switch (this.settings.instance) {
+      case 'prod':
+        ezpaarseUrl = 'http://ezpaarse.couperin.org';
+        break;
+      case 'preprod':
+        ezpaarseUrl = 'http://ezpaarse-preprod.couperin.org';
+        break;
+      default:
+        ezpaarseUrl = this.settings.ezpaarseUrl;
+      }
+
+      if (!ezpaarseUrl) { return; }
+
       const pending = this.requests.filter(req => {
         if (req.status === 'pending' || req.status === 'error') {
           req.status = 'processing';
@@ -127,7 +143,7 @@ const vm = new Vue({
         headers[h.name] = h.value;
       });
 
-      fetch(this.settings.ezpaarseUrl, {
+      fetch(ezpaarseUrl, {
         method: 'POST',
         body: logs,
         headers: headers

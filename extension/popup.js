@@ -1,7 +1,7 @@
 window.onload = function () {
   const appName      = 'ezpaarse logger (app)';
   const installText  = document.getElementById('install');
-  const launchButton = document.getElementById('launch-button')
+  const launchButton = document.getElementById('launch-button');
 
   chrome.management.getAll(extensions => {
     const ext = extensions.find(e => (e.name.toLowerCase() === appName));

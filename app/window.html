@@ -117,10 +117,26 @@
         <div class="modal-body">
           <div class="content">
             <h4>General</h4>
+
             <div class="form-group">
               <label class="form-label" for="ezurl">ezPAARSE URL</label>
-              <input type="text" class="form-input" v-model="settings.ezpaarseUrl" id="ezurl" placeholder="ezPAARSE URL"/>
+
+              <label class="form-radio">
+                <input type="radio" value="prod" v-model="settings.instance"/>
+                <i class="form-icon"></i> National prod
+              </label>
+              <label class="form-radio">
+                <input type="radio" value="preprod" v-model="settings.instance" />
+                <i class="form-icon"></i> National pre-prod
+              </label>
+              <label class="form-radio">
+                <input type="radio" value="other" v-model="settings.instance" />
+                <i class="form-icon"></i> Other
+              </label>
+
+              <input v-if="settings.instance === 'other'" type="text" class="form-input" v-model="settings.ezpaarseUrl" id="ezurl" placeholder="ezPAARSE URL"/>
             </div>
+
             <div class="form-group">
               <label class="form-switch">
                 <input type="checkbox" v-model="settings.fullDisplay" />
