@@ -3,7 +3,7 @@ ezPAARSE Logger
 
 This chrome application captures all the web traffic from the browser and can send it to [ezPAARSE](https://github.com/ezpaarse-project/ezpaarse) to let you analyze it.
 
-**NB:** This extension only works with the last beta version of ezPAARSE (from commit https://github.com/ezpaarse-project/ezpaarse/commit/8088c3ac4828f9ac06d65b66322cf77035e25c8e).
+**NB:** This extension requires ezPAARSE to be **v2.9.0** or greater.
 
 Installation
 ===
