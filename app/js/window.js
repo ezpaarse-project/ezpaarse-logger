@@ -1,6 +1,5 @@
 // ID of the logger extension
-// const extensionId = 'cpjllnfdfhkmbkplldfndmfdbabcbidc';
-const extensionId = 'ojalbpcpieecpiejgopnfgacooeehemk';
+const extensionId = 'cpjllnfdfhkmbkplldfndmfdbabcbidc';
 
 const defaultSettings = {
   instance: 'other',
