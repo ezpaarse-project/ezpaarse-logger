@@ -2,193 +2,132 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="css/spectre.min.css" />
+  <link rel="stylesheet" href="bower_components/keen-ui/dist/min/keen-ui.min.css" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <div id="app">
-    <div class="header">
-      <button class="btn btn-sm" v-bind:class="{ 'loading': processing }" v-on:click="analyze">Analyze</button>
-      <button class="btn btn-sm" v-on:click="removeNoise">Remove CSS/JS/Images</button>
-      <button class="btn btn-sm" v-on:click="showExport">Export</button>
-      <button class="btn btn-sm" v-on:click="clear">Clear</button>
-      <button class="btn btn-sm" v-on:click="toggleConfig">Config</button>
+    <ui-toolbar title="ezPAARSE Logger" class="page-toolbar" type="colored" text-color="white" hide-nav-icon>
+      <div slot="actions">
+        <ui-icon-button v-on:click="analyze" tooltip="Analyze lines" :loading="processing" type="clear" color="white" icon="pageview"></ui-icon-button>
+        <ui-icon-button v-on:click="clear" tooltip="Clear lines" type="clear" color="white" icon="clear_all"></ui-icon-button>
+        <ui-icon-button type="clear" color="white" icon="more_vert" v-on:menu-option-selected="menuSelect" has-dropdown-menu show-menu-icons :menu-options="menu" dropdown-position="bottom right"></ui-icon-button>
+      </div>
+    </ui-toolbar>
+
+    <div class="page-content">
+
+      <p class="empty-notice" v-if="requests.length === 0">
+        Waiting for traffic, let's browse the Internet !
+      </p>
+
+      <div class="line" v-for="req in requests" v-on:click="setDetailed(req)">
+        <div class="item">
+          <div class="top">
+            <span class="info" v-if="req.type">
+              <span class="title">status:</span> <span class="label label-{{ req.status }}">{{ req.status }}</span>
+            </span>
+            <span class="info" v-if="req.type">
+              <span class="title">type:</span> <span>{{ req.type }}</span>
+            </span>
+            <span class="info" v-if="req.ec.rtype">
+              <span class="title">rtype:</span> <span>{{ req.ec.rtype }}</span>
+            </span>
+            <span class="info" v-if="req.ec.mime">
+              <span class="title">mime:</span> <span>{{ req.ec.mime }}</span>
+            </span>
+          </div>
+
+          <div class="break">{{ req.url }}</div>
+        </div>
+      </div>
     </div>
-
-    <table class="table table-striped" v-bind:class="{ 'full-display': settings.fullDisplay }" id="items">
-      <thead>
-        <tr>
-          <th>URL</th>
-          <th style="width: 140px">Ressource type</th>
-          <th style="width: 110px">Status</th>
-          <th style="width: 110px">Type</th>
-          <th style="width: 110px">Mime</th>
-          <th style="width: 80px"></th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="req in requests">
-          <td>{{ req.url }}</td>
-          <td>{{ req.type }}</td>
-          <td><span class="label label-{{ req.status }}">{{ req.status }}</span></td>
-          <td>{{ req.ec.rtype }}</td>
-          <td>{{ req.ec.mime }}</td>
-          <td><button class="btn btn-sm" v-on:click="setDetailed(req)">detail</button></td>
-        </tr>
-      </tbody>
-    </table>
 
     <!-- Request details -->
-    <div class="active modal" v-if="detailed">
-      <div class="modal-overlay"></div>
-      <div class="modal-container">
-        <div class="modal-header">
-          <button class="btn btn-clear float-right" v-on:click="clearDetails"></button>
-          <div class="modal-title">Full view</div>
-        </div>
-        <div class="modal-body">
-          <div class="content">
-            <h3>Request</h3>
-            <dl>
-              <dt>URL</dt>
-              <dd>{{ detailed.url }}</dd>
-            </dl>
-            <dl>
-              <dt>Resource type</dt>
-              <dd>{{ detailed.type }}</dd>
-            </dl>
-            <dl>
-              <dt>Status</dt>
-              <dd><span class="label label-{{ detailed.status }}">{{ detailed.status }}</span></dd>
-            </dl>
+    <ui-modal :show.sync="show.details" type="large" header="Full view">
+      <h3>Request</h3>
 
-            <div v-if="detailed.ec">
-              <h3>Consultation event</h3>
-              <dl v-for="(prop, value) in detailed.ec">
-                <dt>{{ prop }}</dt>
-                <dd>{{ value }}</dd>
-              </dl>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-link" v-on:click="clearDetails">Close</button>
-        </div>
+      <table>
+        <tbody>
+          <tr>
+            <th>URL</th>
+            <td class="break">{{ detailed.url }}</td>
+          </tr>
+          <tr>
+            <th>Resource type</th>
+            <td>{{ detailed.type }}</td>
+          </tr>
+          <tr>
+            <th>Status</th>
+            <td><span class="label label-{{ detailed.status }}">{{ detailed.status }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div v-if="detailed.ec">
+        <h3>Consultation event</h3>
+
+        <table class="break">
+          <tbody>
+            <tr v-for="(prop, value) in detailed.ec">
+              <th>{{ prop }}</th>
+              <td class="break">{{ value }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </div>
+    </ui-modal>
 
     <!-- Export -->
-    <div class="active modal" v-if="export">
-      <div class="modal-overlay"></div>
-      <div class="modal-container">
-        <div class="modal-header">
-          <button class="btn btn-clear float-right" v-on:click="clearExport"></button>
-          <div class="modal-title">Export</div>
-        </div>
-        <div class="modal-body">
-          <div class="content">
-            <p>Below is an export of the requests, you can save it and submit it manually to ezPAARSE.</p>
-
-            <div class="form-group">
-              <label class="form-label" for="export-format">Log format</label>
-              <input type="text" class="form-input" id="export-format" value="Log-Format-EZproxy: %{timestamp}<[0-9]+> %m %U %s %{ezid}<[0-9]+>" readonly>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="export-logs">Log lines</label>
-              <textarea class="form-input" id="export-logs" rows="10">{{ export }}</textarea>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-link" v-on:click="clearExport">Close</button>
-        </div>
+    <ui-modal :show.sync="show.export" type="normal" header="Export">
+      <p>Click below to export the traffic you captured as a standard log file. You can give it straight to ezPAARSE, <strong>no configuration needed</strong>.</p>
+      <div slot="footer">
+        <ui-button color="primary" v-on:click="exportAsFile" icon="file_upload">Export</ui-button>
+        <ui-button v-on:click="toggleExport">Close</ui-button>
       </div>
-    </div>
+    </ui-modal>
 
     <!-- Configuration -->
-    <div class="active modal" v-if="showConfig">
-      <div class="modal-overlay"></div>
-      <div class="modal-container">
-        <div class="modal-header">
-          <button class="btn btn-clear float-right" v-on:click="toggleConfig"></button>
-          <div class="modal-title">Configuration</div>
-        </div>
-        <div class="modal-body">
-          <div class="content">
-            <h4>General</h4>
+    <ui-modal :show.sync="show.config" type="normal" header="Configuration">
+      <h4>General</h4>
 
-            <div class="form-group">
-              <label class="form-label" for="ezurl">ezPAARSE URL</label>
+      <ui-checkbox :model.sync="settings.autoRemoveNoise">Automatic noise filtering (images, scripts...)</ui-checkbox>
 
-              <label class="form-radio">
-                <input type="radio" value="prod" v-model="settings.instance"/>
-                <i class="form-icon"></i> National prod
-              </label>
-              <label class="form-radio">
-                <input type="radio" value="preprod" v-model="settings.instance" />
-                <i class="form-icon"></i> National pre-prod
-              </label>
-              <label class="form-radio">
-                <input type="radio" value="other" v-model="settings.instance" />
-                <i class="form-icon"></i> Other
-              </label>
+      <ui-radio-group :options="instanceOptions" label="ezPAARSE URL" :value.sync="settings.instance" vertical></ui-radio-group>
+      <ui-textbox v-if="settings.instance === 'other'" :value.sync="settings.ezpaarseUrl" label="ezPAARSE URL" type="text" placeholder="http://" help-text="Enter the URL of an ezPAARSE instance (v2.9.0 or greater)"></ui-textbox>
 
-              <input v-if="settings.instance === 'other'" type="text" class="form-input" v-model="settings.ezpaarseUrl" id="ezurl" placeholder="ezPAARSE URL"/>
-            </div>
+      <h4>Headers</h4>
 
-            <div class="form-group">
-              <label class="form-switch">
-                <input type="checkbox" v-model="settings.fullDisplay" />
-                <i class="form-icon"></i> Display long values on multiple lines
-              </label>
-            </div>
-
-            <div class="form-group">
-              <h4>Headers</h4>
-
-              <div class="columns" v-for="header in settings.headers">
-                <div class="column col-5">
-                  <input class="form-input" type="text" v-model="header.name" placeholder="Name"/>
-                </div>
-                <div class="column col-5">
-                  <input class="column form-input" type="text" v-model="header.value" placeholder="Value"/>
-                </div>
-                <div class="column">
-                  <button class="btn" v-on:click="removeHeader($index)">Remove</button>
-                </div>
-              </div>
-
-              <button class="btn" v-on:click="addHeader">Add</button>
-            </div>
-
-            <div class="form-group">
-              <h4>Proxy suffixes</h4>
-
-              <div class="columns" v-for="suffix in settings.proxySuffixes">
-                <div class="column col-10">
-                  <input class="form-input" type="text" v-model="suffix.str" placeholder="Ex: gate.myproxy.com"/>
-                </div>
-                <div class="column">
-                  <button class="btn" v-on:click="removeProxy($index)">Remove</button>
-                </div>
-              </div>
-
-              <button class="btn" v-on:click="addProxy">Add</button>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn" v-on:click="saveSettings">Save</button>
-          <button class="btn" v-on:click="clearSettings">Defauts</button>
-          <button class="btn" v-on:click="toggleConfig">Close</button>
-        </div>
+      <div class="flex" v-for="header in settings.headers">
+        <ui-textbox class="grow" :value.sync="header.name" placeholder="Name"></ui-textbox>
+        <ui-textbox class="grow" :value.sync="header.value" placeholder="Value"></ui-textbox>
+        <ui-icon-button v-on:click="removeHeader($index)" tooltip="Remove header" icon="clear"></ui-icon-button>
       </div>
-    </div>
-  </div>
 
-  <script src="js/vue.min.js"></script>
-  <script src="js/fetch.js"></script>
+      <ui-button v-on:click="addHeader" icon="add">Add header</ui-button>
+
+      <h4>Proxy suffixes</h4>
+
+      <div class="flex" v-for="suffix in settings.proxySuffixes">
+        <ui-textbox class="grow" :value.sync="suffix.str" placeholder="Ex: gate.myproxy.com"></ui-textbox>
+        <ui-icon-button v-on:click="removeProxy($index)" tooltip="Remove proxy" icon="clear"></ui-icon-button>
+      </div>
+
+      <ui-button v-on:click="addProxy" icon="add">Add proxy</ui-button>
+
+      <div slot="footer">
+         <ui-button color="primary" v-on:click="saveSettings">Save</ui-button>
+         <ui-button v-on:click="clearSettings">Defauts</ui-button>
+         <ui-button v-on:click="toggleConfig">Close</ui-button>
+       </div>
+    </div>
+  </ui-modal>
+
+  <script src="bower_components/vue/dist/vue.min.js"></script>
+  <script src="bower_components/keen-ui/dist/min/keen-ui.min.js"></script>
+  <script src="bower_components/file-saver/FileSaver.min.js"></script>
+  <script src="bower_components/moment/min/moment.min.js"></script>
+  <script src="bower_components/fetch/fetch.js"></script>
   <script src="js/window.js"></script>
 </body>
 </html>

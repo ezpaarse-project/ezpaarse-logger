@@ -1,15 +1,18 @@
 // ID of the logger extension
-const extensionId = 'cpjllnfdfhkmbkplldfndmfdbabcbidc';
+// const extensionId = 'cpjllnfdfhkmbkplldfndmfdbabcbidc';
+const extensionId = 'ojalbpcpieecpiejgopnfgacooeehemk';
 
 const defaultSettings = {
   instance: 'other',
   ezpaarseUrl: 'http://127.0.0.1:59599',
-  fullDisplay: false,
   proxySuffixes: [],
   headers: [
     { name: 'Double-Click-Removal', value: 'false' }
-  ]
+  ],
+  autoRemoveNoise: false
 };
+
+Vue.use(Keen);
 
 const vm = new Vue({
   el: '#app',
@@ -18,26 +21,62 @@ const vm = new Vue({
     requests: [],
     counter: 0,
     detailed: null,
-    showConfig: false,
+    show: {
+      config: false,
+      details: false,
+      export: false
+    },
     processing: false,
-    export: null
+    export: null,
+    menu: [
+      { id: 1, text: 'Export', icon: 'file_upload' },
+      { id: 2, text: 'Filter noise (scripts, images...)', icon: 'filter_list' },
+      { type: 'divider' },
+      { id: 3, text: 'Settings', icon: 'settings' },
+      { id: 4, text: 'About', icon: 'info' }
+    ],
+    instanceOptions: [
+      { text: 'National production', value: 'prod' },
+      { text: 'National pre-production', value: 'preprod' },
+      { text: 'Other', value: 'other' }
+    ]
   },
   ready: function () {
     this.loadSettings();
     this.monitor();
   },
   methods: {
+    menuSelect: function (selection) {
+      switch (selection.id) {
+      case 1: // Export
+        this.toggleExport();
+        break;
+      case 2: // Remove noise
+        this.removeNoise();
+        break;
+      case 3: // Config
+        this.toggleConfig();
+        break;
+      case 4: // About
+        window.open('https://github.com/ezpaarse-project/ezpaarse-logger');
+        break;
+      }
+    },
     monitor: function () {
       // long-lived connection with the extension
       const port = chrome.runtime.connect(extensionId);
 
       port.onMessage.addListener(info => {
+        if (this.settings.autoRemoveNoise && this.isNoisy(info)) { return; }
+
         this.settings.proxySuffixes.forEach(suffix => {
           if (!suffix || !suffix.str) { return; }
 
           const reg = new RegExp(`^([a-z]+://[^/]+?)\.?${this.regEscape(suffix.str)}(/|$)`, 'i');
           info.url = info.url.replace(reg, '$1$2');
         });
+
+        const lengthHeader = (info.responseHeaders ||[]).find(header => /^content-length$/.test(header.name));
 
         this.requests.push({
           url: info.url,
@@ -47,7 +86,8 @@ const vm = new Vue({
           startDate: new Date(info.timeStamp),
           status: 'pending',
           id: ++this.counter,
-          ec: null
+          ec: null,
+          contentLength: lengthHeader ? lengthHeader.value : null
         });
       });
     },
@@ -62,8 +102,12 @@ const vm = new Vue({
     clearSettings: function () {
       chrome.storage.local.remove('config', this.loadSettings);
     },
-    toggleConfig: function () { this.showConfig = !this.showConfig; },
-    setDetailed: function (req) { this.detailed = req; },
+    toggleConfig: function () { this.show.config = !this.show.config; },
+    toggleExport: function () { this.show.export = !this.show.export; },
+    setDetailed: function (req) {
+      this.show.details = true;
+      this.detailed = req;
+    },
     clearDetails: function () { this.detailed = null; },
     clear: function () { this.requests = []; },
     addHeader: function () { this.settings.headers.push({}); },
@@ -71,25 +115,26 @@ const vm = new Vue({
     addProxy: function () { this.settings.proxySuffixes.push({}); },
     removeProxy: function (index) { this.settings.proxySuffixes.splice(index, 1); },
     removeNoise: function () {
-      this.requests = this.requests.filter(req => {
-        if (!req.type) { return true; }
-
-        switch (req.type) {
-          case 'image':
-          case 'script':
-          case 'stylesheet':
-          case 'font':
-            return false;
-        }
-
-        return true;
-      });
+      this.requests = this.requests.filter(req => !this.isNoisy(req));
     },
-    showExport: function () {
-      this.export = this.toLogLines(this.requests);
+    isNoisy: function (req) {
+      switch (req.type) {
+        case 'image':
+        case 'script':
+        case 'stylesheet':
+        case 'font':
+          return true;
+      }
+      return false;
     },
-    clearExport: function () {
-      this.export = null;
+    exportAsFile: function () {
+      const dateFormat  = 'DD/MMM/YYYY:HH:mm:ss Z';
+      const textContent = this.requests.map(req => {
+        // 127.0.0.1 - - [14 /Mar/2014:09:39:18 -0700] “GET http://www.somedb.com:80/index.html HTTP/1.1” 200 1234
+        return `127.0.0.1 - - [${moment(req.startDate).format(dateFormat)}] "${req.method} ${req.url} HTTP/1.1" ${req.statusCode} ${req.contentLength || 0}`;
+      }).join('\r\n');
+
+      saveAs(new Blob([textContent], { type: 'text/plain;charset=utf-8' }), 'export.log');
     },
     toLogLines: function (requests) {
       return requests.map(req => {
@@ -98,9 +143,10 @@ const vm = new Vue({
           req.method,
           req.url,
           req.statusCode,
+          req.contentLength || '-',
           req.id
         ].join(' ');
-      }).join('\n');
+      }).join('\r\n');
     },
     regEscape: function (str) {
       return str.replace(/([.*+?^${}()|[\]\\])/g, '\\$1');
@@ -136,7 +182,7 @@ const vm = new Vue({
       const logs = this.toLogLines(pending);
       const headers = {
         'Accept': 'application/json',
-        'Log-Format-EZproxy': '%{timestamp}<[0-9]+> %m %U %s %{ezid}<[0-9]+>'
+        'Log-Format-EZproxy': '%{timestamp}<[0-9]+> %m %U %s %{size}<[0-9\\-]+> %{ezid}<[0-9]+>'
       };
 
       this.settings.headers.forEach(h => {

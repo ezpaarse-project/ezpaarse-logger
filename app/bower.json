@@ -1,0 +1,24 @@
+{
+  "name": "ezpaarse-logger",
+  "homepage": "https://github.com/ezpaarse-project/ezpaarse-logger",
+  "authors": [
+    "Yannick Schurter <yannick.schurter@gmail.com>"
+  ],
+  "description": "analyzes the web traffic with ezPAARSE",
+  "license": "CeCILL",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "keen-ui": "~0.8.9",
+    "fetch": "~1.0.0",
+    "vue": "1.0.26-csp",
+    "moment": "~2.14.1",
+    "file-saver": "~1.3.2"
+  }
+}
