@@ -16,7 +16,7 @@ Usage
 - Ensure that the extension is active
 - Go to the [WebApp page](https://ezpaarse-project.github.io/ezpaarse-logger/) or click the extension icon
 - Once opened, the app will capture your web traffic as you browse the internet
-- Click 'Analyze' to send the captured traffic to the instance of ezPAARSE
+- Click 'Analyze' to send the captured traffic to ezPAARSE
 
 Note
 ===
