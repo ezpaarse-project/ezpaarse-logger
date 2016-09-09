@@ -2,6 +2,8 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="img/ezlogger-16.png" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link rel="stylesheet" href="bower_components/keen-ui/dist/min/keen-ui.min.css" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
@@ -84,6 +86,18 @@
       <div slot="footer">
         <ui-button color="primary" v-on:click="exportAsFile" icon="file_upload">Export</ui-button>
         <ui-button v-on:click="toggleExport">Close</ui-button>
+      </div>
+    </ui-modal>
+
+    <!-- Connection warning -->
+    <ui-modal :show.sync="show.warning" type="normal" header="Warning">
+      <p>We couldn't connect to the extension. Please check that :<p>
+      <ul>
+        <li>You are using Google Chrome.</li>
+        <li>The <a href="https://chrome.google.com/webstore/detail/ezpaarse-logger-extension/cpjllnfdfhkmbkplldfndmfdbabcbidc" target="_blank">companion extension</a> is installed and activated.</li>
+      </ul>
+      <div slot="footer">
+        <ui-button v-on:click="toggleWarning">Close</ui-button>
       </div>
     </ui-modal>
 

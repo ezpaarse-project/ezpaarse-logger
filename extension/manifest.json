@@ -12,9 +12,11 @@
   },
   "permissions": [
     "<all_urls>",
-    "webRequest",
-    "management"
+    "webRequest"
   ],
+  "externally_connectable": {
+    "matches": ["*://ezpaarse-project.github.io/*", "*://localhost/*"]
+  },
   "icons": {
     "16": "img/ezlogger-16.png",
     "48": "img/ezlogger-48.png",

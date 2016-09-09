@@ -1,5 +1,6 @@
 // ID of the logger extension
-const extensionId = 'cpjllnfdfhkmbkplldfndmfdbabcbidc';
+// const extensionId = 'cpjllnfdfhkmbkplldfndmfdbabcbidc';
+const extensionId = 'ojalbpcpieecpiejgopnfgacooeehemk';
 
 const defaultSettings = {
   instance: 'other',
@@ -23,7 +24,8 @@ const vm = new Vue({
     show: {
       config: false,
       details: false,
-      export: false
+      export: false,
+      warning: false
     },
     processing: false,
     export: null,
@@ -62,8 +64,15 @@ const vm = new Vue({
       }
     },
     monitor: function () {
+      let connect;
+      try {
+        connect = chrome.runtime.connect;
+      } catch (e) {
+        return this.toggleWarning();
+      }
+
       // long-lived connection with the extension
-      const port = chrome.runtime.connect(extensionId);
+      const port = connect(extensionId);
 
       port.onMessage.addListener(info => {
         if (this.settings.autoRemoveNoise && this.isNoisy(info)) { return; }
@@ -91,18 +100,25 @@ const vm = new Vue({
       });
     },
     saveSettings: function () {
-      chrome.storage.local.set({ 'config': this.settings });
+      localStorage.setItem('config', JSON.stringify(this.settings));
     },
     loadSettings: function () {
-      chrome.storage.local.get('config', items => {
-        this.settings = (items && items.config) || JSON.parse(JSON.stringify(defaultSettings));
-      });
+      try {
+        this.settings = JSON.parse(localStorage.getItem('config'));
+        if (!this.settings) {
+          this.settings = JSON.parse(JSON.stringify(defaultSettings));
+        }
+      } catch (e) {
+        this.settings = JSON.parse(JSON.stringify(defaultSettings));
+      };
     },
     clearSettings: function () {
-      chrome.storage.local.remove('config', this.loadSettings);
+      localStorage.removeItem('config');
+      this.loadSettings();
     },
     toggleConfig: function () { this.show.config = !this.show.config; },
     toggleExport: function () { this.show.export = !this.show.export; },
+    toggleWarning: function () { this.show.warning = !this.show.warning; },
     setDetailed: function (req) {
       this.show.details = true;
       this.detailed = req;
