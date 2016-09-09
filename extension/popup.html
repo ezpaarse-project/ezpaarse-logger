@@ -3,32 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <style>
-    button {
+    a.button {
       width: 100px;
       color: #FFFFFF;
       background: #333030;
       margin: 5px;
-      padding: 12px 12px;
+      padding: 8px 12px;
       cursor: pointer;
       text-align: center;
       white-space: nowrap;
       text-transform: capitalize;
+      text-decoration: none;
       border: 0 none;
       border-radius: 4px;
       font-size: 14px;
     }
-    #install {
-      width: 200px;
-      display: none;
-    }
   </style>
 </head>
 <body>
-  <button id="launch-button">Launch app</button>
-  <div id="install">
-    <p>Companion app not found</p>
-    <p><a target="_blank" href="https://chrome.google.com/webstore/detail/ezpaarse-logger-app/cgkdokmipoadhnjmckgkmgeffllhhcna?hl=fr">Click here</a> to install it.</p>
-  </div>
-  <script src="popup.js"></script>
+  <a class="button" href="https://ezpaarse-project.github.io/ezpaarse-logger/" target="_blank">Launch app</button>
 </body>
 </html>
