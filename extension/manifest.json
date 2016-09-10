@@ -8,15 +8,22 @@
     "persistent": true
   },
   "browser_action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "img/ezlogger-16.png",
+      "48": "img/ezlogger-48.png"
+    }
   },
   "permissions": [
     "<all_urls>",
     "webRequest"
   ],
-  "externally_connectable": {
-    "matches": ["*://ezpaarse-project.github.io/*", "*://localhost/*"]
-  },
+  "content_scripts": [
+    {
+      "matches": ["*://ezpaarse-project.github.io/*", "*://localhost/*"],
+      "js": ["content_script.js"]
+    }
+  ],
   "icons": {
     "16": "img/ezlogger-16.png",
     "48": "img/ezlogger-48.png",

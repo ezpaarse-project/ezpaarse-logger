@@ -23,8 +23,7 @@ const vm = new Vue({
     show: {
       config: false,
       details: false,
-      export: false,
-      warning: false
+      export: false
     },
     processing: false,
     export: null,
@@ -63,17 +62,15 @@ const vm = new Vue({
       }
     },
     monitor: function () {
-      let connect;
-      try {
-        connect = chrome.runtime.connect;
-      } catch (e) {
-        return this.toggleWarning();
-      }
+      document.addEventListener('ezlogger-request', event => {
+        let info;
 
-      // long-lived connection with the extension
-      const port = connect(extensionId);
+        try {
+          info = JSON.parse(event.detail);
+        } catch (e) {
+          return;
+        }
 
-      port.onMessage.addListener(info => {
         if (this.settings.autoRemoveNoise && this.isNoisy(info)) { return; }
 
         this.settings.proxySuffixes.forEach(suffix => {
@@ -83,7 +80,7 @@ const vm = new Vue({
           info.url = info.url.replace(reg, '$1$2');
         });
 
-        const lengthHeader = (info.responseHeaders ||[]).find(header => /^content-length$/.test(header.name));
+        const lengthHeader = (info.responseHeaders || []).find(header => /^content-length$/.test(header.name));
 
         this.requests.push({
           url: info.url,
@@ -117,7 +114,6 @@ const vm = new Vue({
     },
     toggleConfig: function () { this.show.config = !this.show.config; },
     toggleExport: function () { this.show.export = !this.show.export; },
-    toggleWarning: function () { this.show.warning = !this.show.warning; },
     setDetailed: function (req) {
       this.show.details = true;
       this.detailed = req;
