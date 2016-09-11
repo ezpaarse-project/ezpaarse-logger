@@ -8,7 +8,7 @@ ezPAARSE logger is a web application that captures the traffic from the browser 
 Installation
 ===
 
-Get the companion extension for [Google Chrome](https://chrome.google.com/webstore/detail/ezpaarse-logger-extension/cpjllnfdfhkmbkplldfndmfdbabcbidc) (Firefox coming soon!).
+Get the companion extension for either [Google Chrome](https://chrome.google.com/webstore/detail/ezpaarse-logger-extension/cpjllnfdfhkmbkplldfndmfdbabcbidc) or [Mozilla Firefox](https://addons.mozilla.org/fr/firefox/addon/ezpaarse-logger-extension/).
 
 Usage
 ===
