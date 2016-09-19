@@ -2,7 +2,7 @@
 const extensionId = 'cpjllnfdfhkmbkplldfndmfdbabcbidc';
 
 const defaultSettings = {
-  instance: 'other',
+  instance: 'local',
   ezpaarseUrl: 'http://127.0.0.1:59599',
   proxySuffixes: [],
   headers: [
@@ -37,6 +37,7 @@ const vm = new Vue({
     instanceOptions: [
       { text: 'National production', value: 'prod' },
       { text: 'National pre-production', value: 'preprod' },
+      { text: 'Local instance', value: 'local' },
       { text: 'Other', value: 'other' }
     ]
   },
@@ -170,6 +171,9 @@ const vm = new Vue({
         break;
       case 'preprod':
         ezpaarseUrl = 'http://ezpaarse-preprod.couperin.org';
+        break;
+      case 'local':
+        ezpaarseUrl = 'http://127.0.0.1:59599';
         break;
       default:
         ezpaarseUrl = this.settings.ezpaarseUrl;
