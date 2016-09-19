@@ -92,12 +92,21 @@
 
     <!-- Configuration -->
     <ui-modal :show.sync="show.config" type="normal" header="Configuration">
+      <h4>ezPAARSE instance</h4>
+      
+      <p>
+        <ui-button v-on:click="testConnection" :loading="connectionTest.loading" icon="import_export">Test connection</ui-button>
+      </p>
+
+      <ui-alert type="success" v-if="connectionTest.version">Connection successful. Version: {{ connectionTest.version }}</ui-alert>
+      <ui-alert type="error" v-if="connectionTest.error">{{ connectionTest.error }}</ui-alert>
+
+      <ui-radio-group :options="instanceOptions" :value.sync="settings.instance" vertical></ui-radio-group>
+      <ui-textbox v-if="settings.instance === 'other'" :value.sync="settings.ezpaarseUrl" label="ezPAARSE URL" type="text" placeholder="http://" help-text="Enter the URL of an ezPAARSE instance (v2.9.0 or greater)"></ui-textbox>
+
       <h4>General</h4>
 
       <ui-checkbox :model.sync="settings.autoRemoveNoise">Automatic noise filtering (images, scripts...)</ui-checkbox>
-
-      <ui-radio-group :options="instanceOptions" label="ezPAARSE URL" :value.sync="settings.instance" vertical></ui-radio-group>
-      <ui-textbox v-if="settings.instance === 'other'" :value.sync="settings.ezpaarseUrl" label="ezPAARSE URL" type="text" placeholder="http://" help-text="Enter the URL of an ezPAARSE instance (v2.9.0 or greater)"></ui-textbox>
 
       <h4>Headers</h4>
 

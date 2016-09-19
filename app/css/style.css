@@ -59,6 +59,9 @@ body {
   max-height: 95vh;
   max-width: 95vw;
 }
+.ui-alert-body {
+  min-height: 20px;
+}
 .break {
   word-break: break-all;
 }

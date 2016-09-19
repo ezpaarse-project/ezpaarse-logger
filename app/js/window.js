@@ -17,6 +17,11 @@ const vm = new Vue({
   el: '#app',
   data: {
     settings: {},
+    connectionTest: {
+      loading: false,
+      error: null,
+      version: null
+    },
     requests: [],
     counter: 0,
     detailed: null,
@@ -164,7 +169,7 @@ const vm = new Vue({
     regEscape: function (str) {
       return str.replace(/([.*+?^${}()|[\]\\])/g, '\\$1');
     },
-    analyze: function () {
+    getInstanceUrl: function () {
       let ezpaarseUrl;
 
       switch (this.settings.instance) {
@@ -180,6 +185,48 @@ const vm = new Vue({
       default:
         ezpaarseUrl = this.settings.ezpaarseUrl;
       }
+      
+      return ezpaarseUrl;
+    },
+    testConnection: function () {
+      let ezpaarseUrl = this.getInstanceUrl();
+      if (!ezpaarseUrl || this.connectionTest.loading) { return; }
+
+      this.connectionTest.loading = true;
+      this.connectionTest.error   = null;
+      this.connectionTest.version = null;
+
+      fetch(`${ezpaarseUrl}/info/version`)
+      .then(response => {
+        this.connectionTest.loading = false;
+
+        if (response.status !== 200) {
+          return this.connectionTest.error = `Invalid response: HTTP status ${response.status}`;
+        }
+
+	response.text().then(body => {
+          const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(body);
+
+          if (!match) {
+            return this.connectionTest.error = `Couldn't determine ezPAARSE version`;
+          }
+
+          const majorVersion = parseInt(match[1]);
+          const minorVersion = parseInt(match[2]);
+
+          if (majorVersion < 2 || (majorVersion === 2 && minorVersion < 9)) {
+            return this.connectionTest.error = `Version: ${body} (required: 2.9.0 or greater)`;
+          }
+
+          this.connectionTest.version = body;
+        });
+      }).catch(err => {
+        this.connectionTest.loading = false;
+        this.connectionTest.error   = 'Connection failed, is it online ?';
+      });
+    },
+    analyze: function () {
+      let ezpaarseUrl = this.getInstanceUrl();
 
       if (!ezpaarseUrl) { return; }
 
