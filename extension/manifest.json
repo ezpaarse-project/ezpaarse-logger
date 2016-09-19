@@ -11,7 +11,8 @@
     "default_popup": "popup.html",
     "default_icon": {
       "16": "img/ezlogger-16.png",
-      "48": "img/ezlogger-48.png"
+      "48": "img/ezlogger-48.png",
+      "128": "img/ezlogger-128.png"
     }
   },
   "permissions": [
@@ -20,7 +21,7 @@
   ],
   "content_scripts": [
     {
-      "matches": ["*://ezpaarse-project.github.io/*", "*://localhost/*"],
+      "matches": ["*://analogist.couperin.org/ezlogger/*", "*://localhost/*"],
       "js": ["content_script.js"]
     }
   ],
