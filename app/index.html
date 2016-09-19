@@ -119,12 +119,16 @@
       <ui-button v-on:click="addProxy" icon="add">Add proxy</ui-button>
 
       <div slot="footer">
-         <ui-button color="primary" v-on:click="saveSettings">Save</ui-button>
-         <ui-button v-on:click="clearSettings">Defauts</ui-button>
-         <ui-button v-on:click="toggleConfig">Close</ui-button>
-       </div>
-    </div>
-  </ui-modal>
+        <ui-button color="primary" v-on:click="saveSettings">Save</ui-button>
+        <ui-button v-on:click="clearSettings">Defauts</ui-button>
+        <ui-button v-on:click="toggleConfig">Close</ui-button>
+      </div>
+    </ui-modal>
+
+    <!-- Error message -->
+    <ui-modal :show.sync="show.error" type="normal" header="Error">
+      <p>Oops! The request failed. Please check that the ezPAARSE instance you are using is <strong>online</strong>, and that its version is <strong>2.9.0</strong> or greater.</p>
+    </ui-modal>
 
   <script src="bower_components/vue/dist/vue.min.js"></script>
   <script src="bower_components/keen-ui/dist/min/keen-ui.min.js"></script>

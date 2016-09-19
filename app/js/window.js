@@ -23,7 +23,8 @@ const vm = new Vue({
     show: {
       config: false,
       details: false,
-      export: false
+      export: false,
+      error: false
     },
     processing: false,
     export: null,
@@ -115,6 +116,7 @@ const vm = new Vue({
     },
     toggleConfig: function () { this.show.config = !this.show.config; },
     toggleExport: function () { this.show.export = !this.show.export; },
+    toggleError: function () { this.show.error = !this.show.error; },
     setDetailed: function (req) {
       this.show.details = true;
       this.detailed = req;
@@ -227,6 +229,7 @@ const vm = new Vue({
 
       }).catch(err => {
         this.processing = false;
+        this.toggleError();
         console.error(err);
         pending.forEach(req => { req.status = 'error'; });
       });
