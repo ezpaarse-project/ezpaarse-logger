@@ -185,7 +185,7 @@ const vm = new Vue({
       default:
         ezpaarseUrl = this.settings.ezpaarseUrl;
       }
-      
+
       return ezpaarseUrl;
     },
     testConnection: function () {
@@ -204,7 +204,7 @@ const vm = new Vue({
           return this.connectionTest.error = `Invalid response: HTTP status ${response.status}`;
         }
 
-	response.text().then(body => {
+        response.text().then(body => {
           const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(body);
 
           if (!match) {
