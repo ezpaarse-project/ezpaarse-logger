@@ -2,28 +2,20 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <style>
-    body {
-      font-family: "Segoe UI", Tahoma, sans-serif;
-    }
-    a.button {
-      width: 100px;
-      color: #FFFFFF;
-      background: #333030;
-      margin: 5px;
-      padding: 8px 12px;
-      cursor: pointer;
-      text-align: center;
-      white-space: nowrap;
-      text-transform: capitalize;
-      text-decoration: none;
-      border: 0 none;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="popup.css">
 </head>
 <body>
-  <a class="button" href="http://analogist.couperin.org/ezlogger/" target="_blank">Launch app</button>
+  <div id="wrapper">
+    <div class="flex">
+      <button class="button toggled-on" id="toggler-off" role="button">&#10003; Enabled</button>
+      <button class="button toggled-off" id="toggler-on" role="button">&#10007; Disabled</button>
+      <a class="button" href="http://analogist.couperin.org/ezlogger/" target="_blank">Open app</a>
+    </div>
+
+    <p class="toggled-off">The extension is disabled.</p>
+    <p class="toggled-on">Your web traffic is being captured, open the webapp to analyze it.</p>
+  </div>
+
+  <script src="popup.js"></script>
 </body>
 </html>

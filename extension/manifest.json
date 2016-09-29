@@ -17,7 +17,8 @@
   },
   "permissions": [
     "<all_urls>",
-    "webRequest"
+    "webRequest",
+    "storage"
   ],
   "content_scripts": [
     {
