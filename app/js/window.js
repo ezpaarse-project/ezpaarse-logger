@@ -1,6 +1,3 @@
-// ID of the logger extension
-const extensionId = 'cpjllnfdfhkmbkplldfndmfdbabcbidc';
-
 const defaultSettings = {
   instance: 'local',
   ezpaarseUrl: 'http://127.0.0.1:59599',
