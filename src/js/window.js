@@ -1,5 +1,5 @@
 const defaultSettings = {
-  instance: 'local',
+  instance: 'preprod',
   ezpaarseUrl: 'http://127.0.0.1:59599',
   proxySuffixes: [],
   headers: [
