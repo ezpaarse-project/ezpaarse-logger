@@ -35,9 +35,7 @@ const vm = new Vue({
       { id: 2, text: 'About', icon: 'info' }
     ],
     instanceOptions: [
-      { text: 'National production (http://ezpaarse.couperin.org)', value: 'prod' },
-      { text: 'National pre-production (http://ezpaarse-preprod.couperin.org)', value: 'preprod' },
-      { text: 'Local instance', value: 'local' },
+      { text: 'Public demo instance, latest ezPAARSE version (http://ezpaarse-preprod.couperin.org)', value: 'preprod' },
       { text: 'Other', value: 'other' }
     ]
   },
@@ -161,14 +159,8 @@ const vm = new Vue({
       let ezpaarseUrl;
 
       switch (this.settings.instance) {
-      case 'prod':
-        ezpaarseUrl = 'http://ezpaarse.couperin.org';
-        break;
       case 'preprod':
         ezpaarseUrl = 'http://ezpaarse-preprod.couperin.org';
-        break;
-      case 'local':
-        ezpaarseUrl = 'http://127.0.0.1:59599';
         break;
       default:
         ezpaarseUrl = this.settings.ezpaarseUrl;
