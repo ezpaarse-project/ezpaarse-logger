@@ -1,7 +1,9 @@
 ezPAARSE Logger
 ===
 
-ezPAARSE logger is a web application that captures the traffic from the browser and send it to [ezPAARSE](https://github.com/ezpaarse-project/ezpaarse) to analyze it.
+ezPAARSE logger is a web application that captures the traffic from the browser and sends it to an  [ezPAARSE](https://github.com/ezpaarse-project/ezpaarse) instance of your choice to analyze it.
+This web application is already deployed on http://analogist.couperin.org/ezlogger/ so that you don't have
+to install it yourself.
 
 **NB:** works with ezPAARSE **v2.9.0** or greater.
 
