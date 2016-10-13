@@ -35,7 +35,7 @@ const vm = new Vue({
       { id: 2, text: 'About', icon: 'info' }
     ],
     instanceOptions: [
-      { text: 'Public demo instance, latest ezPAARSE version (http://ezpaarse-preprod.couperin.org)', value: 'preprod' },
+      { text: 'Public demo instance', value: 'preprod' },
       { text: 'Other', value: 'other' }
     ]
   },

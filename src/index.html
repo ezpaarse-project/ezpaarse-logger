@@ -104,8 +104,12 @@
       <ui-alert type="success" :show="!!connectionTest.version">Connection successful. Version: {{ connectionTest.version }}</ui-alert>
       <ui-alert type="error" :show="!!connectionTest.error">{{ connectionTest.error }}</ui-alert>
 
-      <ui-radio-group :options="instanceOptions" :value.sync="settings.instance" vertical></ui-radio-group>
-      <ui-textbox v-if="settings.instance === 'other'" :value.sync="settings.ezpaarseUrl" label="ezPAARSE URL" type="text" placeholder="http://" help-text="Enter the URL of an ezPAARSE instance (v2.9.0 or greater)"></ui-textbox>
+      <ui-radio-group :options="instanceOptions"
+                      :value.sync="settings.instance"
+                      label="The public instance is hosted on http://ezpaarse-preprod.couperin.org <br />and always provides the latest version of ezPAARSE"
+                      vertical>
+      </ui-radio-group>
+      <ui-textbox v-if="settings.instance === 'other'" :value.sync="settings.ezpaarseUrl" type="text" placeholder="http://" help-text="URL of an ezPAARSE instance (v2.9.0 or greater)"></ui-textbox>
 
       <h4>General</h4>
 
