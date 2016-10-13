@@ -14,6 +14,8 @@
       <div slot="actions">
         <ui-icon-button v-on:click="analyze" tooltip="Analyze lines" :loading="processing" type="clear" color="white" icon="pageview"></ui-icon-button>
         <ui-icon-button v-on:click="clear" tooltip="Clear lines" type="clear" color="white" icon="clear_all"></ui-icon-button>
+        <ui-icon-button v-on:click="toggleExport" tooltip="Export log lines" type="clear" color="white" icon="file_upload"></ui-icon-button>
+        <ui-icon-button v-on:click="removeNoise" tooltip="Filter noise (scripts, images...)" type="clear" color="white" icon="filter_list"></ui-icon-button>
         <ui-icon-button type="clear" color="white" icon="more_vert" v-on:menu-option-selected="menuSelect" has-dropdown-menu show-menu-icons :menu-options="menu" dropdown-position="bottom right"></ui-icon-button>
       </div>
     </ui-toolbar>
@@ -83,7 +85,8 @@
 
     <!-- Export -->
     <ui-modal :show.sync="show.export" type="normal" header="Export">
-      <p>Click below to export the traffic you captured as a standard log file. You can give it straight to ezPAARSE, <strong>no configuration needed</strong>.</p>
+      <p>Click below to export the traffic you captured as a <strong>standard log file</strong><br />
+        that ezPAARSE can ingest <strong>without any configuration</strong>.</p>
       <div slot="footer">
         <ui-button color="primary" v-on:click="exportAsFile" icon="file_upload">Export</ui-button>
         <ui-button v-on:click="toggleExport">Close</ui-button>

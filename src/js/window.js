@@ -31,16 +31,11 @@ const vm = new Vue({
     processing: false,
     export: null,
     menu: [
-      { id: 1, text: 'Export', icon: 'file_upload' },
-      { id: 2, text: 'Filter noise (scripts, images...)', icon: 'filter_list' },
-      { type: 'divider' },
-      { id: 3, text: 'Settings', icon: 'settings' },
-      { id: 4, text: 'About', icon: 'info' }
+      { id: 1, text: 'Settings', icon: 'settings' },
+      { id: 2, text: 'About', icon: 'info' }
     ],
     instanceOptions: [
-      { text: 'National production', value: 'prod' },
-      { text: 'National pre-production', value: 'preprod' },
-      { text: 'Local instance', value: 'local' },
+      { text: 'Public demo instance, latest ezPAARSE version (http://ezpaarse-preprod.couperin.org)', value: 'preprod' },
       { text: 'Other', value: 'other' }
     ]
   },
@@ -51,16 +46,10 @@ const vm = new Vue({
   methods: {
     menuSelect: function (selection) {
       switch (selection.id) {
-      case 1: // Export
-        this.toggleExport();
-        break;
-      case 2: // Remove noise
-        this.removeNoise();
-        break;
-      case 3: // Config
+      case 1: // Config
         this.toggleConfig();
         break;
-      case 4: // About
+      case 2: // About
         window.open('https://github.com/ezpaarse-project/ezpaarse-logger');
         break;
       }
@@ -170,14 +159,8 @@ const vm = new Vue({
       let ezpaarseUrl;
 
       switch (this.settings.instance) {
-      case 'prod':
-        ezpaarseUrl = 'http://ezpaarse.couperin.org';
-        break;
       case 'preprod':
         ezpaarseUrl = 'http://ezpaarse-preprod.couperin.org';
-        break;
-      case 'local':
-        ezpaarseUrl = 'http://127.0.0.1:59599';
         break;
       default:
         ezpaarseUrl = this.settings.ezpaarseUrl;
