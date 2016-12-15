@@ -16,9 +16,9 @@
   ],
   "dependencies": {
     "keen-ui": "~0.8.9",
-    "fetch": "~1.0.0",
-    "vue": "1.0.26-csp",
-    "moment": "~2.14.1",
-    "file-saver": "~1.3.2"
+    "fetch": "~1.1.1",
+    "vue": "1.0.28-csp",
+    "moment": "~2.17.1",
+    "file-saver": "~1.3.3"
   }
 }
