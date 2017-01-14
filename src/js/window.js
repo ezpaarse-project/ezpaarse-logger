@@ -5,7 +5,8 @@ const defaultSettings = {
   headers: [
     { name: 'Double-Click-Removal', value: 'false' }
   ],
-  autoRemoveNoise: false
+  autoRemoveNoise: false,
+  patchHyphens: false
 };
 
 Vue.use(Keen);
@@ -73,20 +74,48 @@ const vm = new Vue({
           info.url = info.url.replace(reg, '$1$2');
         });
 
-        const lengthHeader = (info.responseHeaders || []).find(header => /^content-length$/.test(header.name));
+        info.lengthHeader = (info.responseHeaders || []).find(header => /^content-length$/.test(header.name));
 
-        this.requests.push({
-          url: info.url,
-          method: info.method,
-          type: info.type,
-          statusCode: info.statusCode,
-          startDate: new Date(info.timeStamp),
-          status: 'pending',
-          id: ++this.counter,
-          ec: null,
-          contentLength: lengthHeader ? lengthHeader.value : null
+        this.getPossibleUrls(info.url).forEach(url => {
+          this.requests.push({
+            url: url,
+            method: info.method,
+            type: info.type,
+            statusCode: info.statusCode,
+            startDate: new Date(info.timeStamp),
+            status: 'pending',
+            id: ++this.counter,
+            ec: null,
+            contentLength: info.lengthHeader ? info.lengthHeader.value : null
+          });
         });
       });
+    },
+    getPossibleUrls: function (url) {
+      if (!this.settings.patchHyphens) { return [url]; }
+
+      const reg = new RegExp(`^([a-z]+://)([^/]+)(.*)`, 'i');
+      const match = reg.exec(url);
+
+      if (!match) { return [url]; }
+
+      const parts = match[2].split('-');
+      if (parts.length <= 1) { return [url]; }
+
+      let domains = [parts[0]];
+
+      for (let i = 1; i < parts.length; i++) {
+        let newDomains = [];
+
+        domains.forEach(d => {
+          newDomains.push(`${d}.${parts[i]}`);
+          newDomains.push(`${d}-${parts[i]}`);
+        });
+
+        domains = newDomains;
+      }
+
+      return domains.map(d => `${match[1]}${d}${match[3]}`);
     },
     saveSettings: function () {
       localStorage.setItem('config', JSON.stringify(this.settings));
