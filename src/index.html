@@ -114,7 +114,9 @@
       <h4>General</h4>
 
       <ui-checkbox :model.sync="settings.autoRemoveNoise">Automatic noise filtering (images, scripts...)</ui-checkbox>
-      <ui-checkbox :model.sync="settings.patchHyphens">Patch hyphens</ui-checkbox>
+      <ui-checkbox :model.sync="settings.patchHyphens">Patch hyphens <sup>1</sup></ui-checkbox>
+
+      <p class="ui-textbox-help-text"><sup>1</sup> If your proxy replaces dots with hyphens, check "patch hyphens" to duplicate lines in order to generate all possible URLs.</p>
 
       <h4>Headers</h4>
 
